@@ -35,6 +35,7 @@
 
 #include <FS.h>
 #include <WiFiClient.h>
+#include <WiFi.h>
 
 #define FTP_SERVER_VERSION "jmwislez/ESP32FtpServer 0.1.0"
 
@@ -52,7 +53,9 @@ class FtpServer {
   public:
     void    begin (String uname, String pword);
     void    handleFTP (fs::FS &fs);
-
+    FtpServer(uint16_t ftpServerPort_, uint16_t dataServerPort_);
+	~FtpServer();
+	
   private:
     bool    haveParameter ();
     bool    makeExistsPath (fs::FS &fs, char * path, char * param = NULL);
@@ -99,6 +102,11 @@ class FtpServer {
              bytesTransferred;          //
     String   _FTP_USER;
     String   _FTP_PASS;
+	WiFiServer ftpServer;
+	WiFiServer dataServer;
+	uint16_t ftpServerPort;
+	uint16_t dataServerPort;
+
 };
 
 #endif // FTP_SERVERESP_H

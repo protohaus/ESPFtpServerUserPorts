@@ -30,9 +30,18 @@
 #endif
 #include <time.h>
 
+FtpServer::FtpServer(uint16_t ftpServerPort_, uint16_t dataServerPort_)
+{
+	ftpServerPort = ftpServerPort_;
+	dataServerPort = dataServerPort_;
+	ftpServer = WiFiServer(ftpServerPort_);
+	dataServer = WiFiServer(dataServerPort_);
+}
 
-WiFiServer ftpServer (FTP_CTRL_PORT);
-WiFiServer dataServer (FTP_DATA_PORT_PASV);
+FtpServer::~FtpServer()
+{
+	
+}
 
 void FtpServer::begin (String uname, String pword) {
   // Tells the ftp server to begin listening for incoming connection
@@ -51,7 +60,7 @@ void FtpServer::begin (String uname, String pword) {
 
 void FtpServer::iniVariables () {
   // Default for data port
-  dataPort = FTP_DATA_PORT_PASV;
+  dataPort = dataServerPort;
   
   // Default Data connection is Active
   dataPassiveConn = false;
@@ -86,7 +95,7 @@ void FtpServer::handleFTP (fs::FS &fs) {
     abortTransfer ();
     iniVariables ();
     #ifdef FTP_DEBUG
-  	Serial.println ("-> ftp server waiting for connection on port " + String (FTP_CTRL_PORT));
+  	Serial.println ("-> ftp server waiting for connection on port " + String (ftpServerPort));
     #endif
     cmdStatus = 2;
   }
@@ -294,7 +303,7 @@ boolean FtpServer::processCommand (fs::FS &fs) {
       #endif
     }
   	dataIp = WiFi.localIP ();	  
-  	dataPort = FTP_DATA_PORT_PASV;
+  	dataPort = dataServerPort;
     #ifdef FTP_DEBUG
   	Serial.println ("-> connection management set to passive");
     Serial.println ("-> data port set to " + String (dataPort));

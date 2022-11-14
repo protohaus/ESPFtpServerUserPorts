@@ -39,6 +39,9 @@
 #define FS_NAME "UNDEF"
 #endif
 
+#define FTP_CTRL_PORT      21           // Command port on wich server is listening  
+#define FTP_DATA_PORT_PASV 50009        // Data port in passive mode
+
 const char* ssid = "*********************";
 const char* password = "*********************";
 
@@ -47,7 +50,7 @@ const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 struct tm   timeinfo;
 
-FtpServer ftpSrv;   //set #define FTP_DEBUG in ESP32FtpServer.h to see ftp verbose on serial
+FtpServer ftpSrvSD(FTP_CTRL_PORT, FTP_DATA_PORT_PASV);   //set #define FTP_DEBUG in ESP32FtpServer.h to see ftp verbose on serial
 
 #ifdef ESP8266
 bool getLocalTime (struct tm * info) {
